@@ -6,8 +6,8 @@ export const overlapRouter = createTRPCRouter({
   calculate: publicProcedure
     .input(
       z.object({
-        first: z.string(),
-        second: z.string(),
+        first: z.string().transform(s => s.toLowerCase()),
+        second: z.string().transform(s => s.toLowerCase()),
         countSpaceAsChar: z.boolean().default(true),
       })
     )
