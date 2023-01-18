@@ -4,31 +4,42 @@ import { createTRPCRouter, publicProcedure } from "../trpc";
 
 export const overlapRouter = createTRPCRouter({
   calculate: publicProcedure
-    .input(z.object({ 
-      first: z.string(),
-      second: z.string(),
-    }))
-    .mutation(({ input: { first, second } }) => {
+    .input(
+      z.object({
+        first: z.string(),
+        second: z.string(),
+        countSpaceAsChar: z.boolean().default(true),
+      })
+    )
+    .mutation(({ input: { first, second, countSpaceAsChar } }) => {
+      const strings = [first, second]
+        .sort((a, b) => a.length - b.length)
+        .map((str) => (countSpaceAsChar ? str : str.replaceAll(" ", "")));
 
-      const [ smaller, bigger ] = [first, second].sort((a,b) => a.length - b.length) as [string, string];
+      const [smaller, bigger] = strings as [string, string];
 
       const shouldSwapPositions = smaller === second;
 
-      const charsOfBigger: Array<string | undefined> = bigger.split('');
-
+      const charsOfBigger: Array<string | undefined> = bigger.split("");
 
       let amountFound = 0;
-      const positions: number[][] = []
+      const positions: number[][] = [];
 
-      for (let idxInSmaller = 0; idxInSmaller < smaller.length; idxInSmaller++) {
+      for (
+        let idxInSmaller = 0;
+        idxInSmaller < smaller.length;
+        idxInSmaller++
+      ) {
         const char = smaller[idxInSmaller];
 
         const idxInBigger = charsOfBigger.findIndex((c) => c == char);
 
-        if(idxInBigger >= 0) {
+        if (idxInBigger >= 0) {
           amountFound++;
 
-          const pos = shouldSwapPositions ? [idxInBigger, idxInSmaller] : [idxInSmaller, idxInBigger]
+          const pos = shouldSwapPositions
+            ? [idxInBigger, idxInSmaller]
+            : [idxInSmaller, idxInBigger];
           positions.push(pos);
 
           charsOfBigger[idxInBigger] = undefined;
@@ -37,7 +48,7 @@ export const overlapRouter = createTRPCRouter({
 
       return {
         amount: amountFound,
-        positions
+        positions,
       };
     }),
 });
