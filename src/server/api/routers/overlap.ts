@@ -25,6 +25,8 @@ export const overlapRouter = createTRPCRouter({
       let amountFound = 0;
       const positions: number[][] = [];
 
+      let lastIndexInBigger = -1;
+
       for (
         let idxInSmaller = 0;
         idxInSmaller < smaller.length;
@@ -32,9 +34,10 @@ export const overlapRouter = createTRPCRouter({
       ) {
         const char = smaller[idxInSmaller];
 
-        const idxInBigger = charsOfBigger.findIndex((c) => c == char);
+        const idxInBigger = charsOfBigger.findIndex((c, i) => i > lastIndexInBigger && c == char);
 
         if (idxInBigger >= 0) {
+          lastIndexInBigger = idxInBigger;
           amountFound++;
 
           const pos = shouldSwapPositions
