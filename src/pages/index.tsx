@@ -138,27 +138,40 @@ const Home: NextPage = () => {
           rel="stylesheet"
         />
       </Head>
-      <main className="flex min-h-screen h-fit flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
-        <div className="container flex flex-col h-fit items-center justify-center gap-12 px-4 py-16 ">
-          <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
+      <main className="flex h-fit min-h-screen flex-col items-center justify-start sm:justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
+        <div className="container flex h-fit flex-col items-center justify-center gap-12 px-4 py-16 ">
+          <h1 className="text-5xl font-extrabold tracking-tight text-white md:text-7xl w-min sm:w-fit">
             Find <span className="text-[hsl(280,100%,70%)]">overlap</span> of
             words
           </h1>
           <form
             onSubmit={handleFormSubmit}
-            className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8"
+            className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-8"
           >
-            <TextInput label="First" placeholder="First" inputRef={firstRef} />
-            <TextInput
-              label="Second"
-              placeholder="Second"
-              inputRef={secondRef}
-            />
+            <div className="sm:col-span-2">
+              <TextInput
+                label="First"
+                placeholder="First"
+                inputRef={firstRef}
+              />
+            </div>
+            <div className="sm:col-span-2 sm:col-start-3">
+              <TextInput
+                label="Second"
+                placeholder="Second"
+                inputRef={secondRef}
+              />
+            </div>
 
-            <button type="submit">Submit form</button>
+            <button
+              className="sm:col-span-2 sm:col-start-2 w-full rounded bg-[hsl(280,100%,70%)] py-2 px-4 font-semibold text-white hover:bg-[hsl(280,100%,50%)]"
+              type="submit"
+            >
+              Submit form
+            </button>
           </form>
 
-          <div className="h-10 w-full max-w-full h-fit">
+          <div className="h-10 h-fit w-full max-w-full">
             {!isLoading && overlappingChars.length ? (
               <Overlap content={overlappingChars} />
             ) : (
