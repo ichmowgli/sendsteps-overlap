@@ -6,8 +6,8 @@ export const overlapRouter = createTRPCRouter({
   calculate: publicProcedure
     .input(
       z.object({
-        first: z.string().transform(s => s.toLowerCase()),
-        second: z.string().transform(s => s.toLowerCase()),
+        first: z.string().transform((s) => s.toLowerCase()),
+        second: z.string().transform((s) => s.toLowerCase()),
         countSpaceAsChar: z.boolean().default(true),
       })
     )
@@ -34,7 +34,9 @@ export const overlapRouter = createTRPCRouter({
       ) {
         const char = smaller[idxInSmaller];
 
-        const idxInBigger = charsOfBigger.findIndex((c, i) => i > lastIndexInBigger && c == char);
+        const idxInBigger = charsOfBigger.findIndex(
+          (c, i) => i > lastIndexInBigger && c == char
+        );
 
         if (idxInBigger >= 0) {
           lastIndexInBigger = idxInBigger;

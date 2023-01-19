@@ -35,6 +35,8 @@ const TextInput = ({
           className="block w-full rounded-md border-gray-300 px-3 placeholder-shown:border-gray-500 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           placeholder={placeholder}
           ref={inputRef}
+          autoComplete="off"
+          autoCapitalize="false"
         />
       </div>
     </div>
@@ -48,12 +50,11 @@ const Overlap = ({ content }: { content: string[] }) => {
     const children = contentRef.current?.children;
     if (!children) return;
     for (const child of children) {
-      (child as HTMLDivElement).style.opacity = "1";
+      (child as HTMLDivElement).style.opacity = value;
     }
   };
 
   useEffect(() => {
-    // setChildrenOpacityTo('0');
     const timer = setTimeout(() => {
       setChildrenOpacityTo("1");
     }, 100);
@@ -61,25 +62,34 @@ const Overlap = ({ content }: { content: string[] }) => {
   }, [contentRef.current?.children]);
 
   return (
-    <div
-      ref={contentRef}
-      className="flex flex-wrap  items-center justify-center bg-gradient-to-r  from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-9xl font-normal tracking-widest text-transparent transition-opacity duration-100"
-      style={{
-        fontFamily: "Modak",
-      }}
-    >
-      {content.map((e, idx) => (
-        <span
-          style={{
-            transitionDelay: `${idx * 100}ms`,
-            opacity: "0",
-          }}
-          key={idx}
-        >
-          {e.toUpperCase()}
-        </span>
-      ))}
-    </div>
+    <>
+      <div className="mx-auto mb-5 w-fit text-center text-3xl font-extrabold tracking-tight text-white md:text-4xl">
+        You got{" "}
+        <span className="text-[hsl(280,100%,70%)]">{content.length}</span>{" "}
+        matching characters
+      </div>
+      <div
+        ref={contentRef}
+        className="flex flex-wrap items-center justify-center bg-gradient-to-r  from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-9xl font-normal tracking-widest text-transparent transition-opacity duration-100"
+        style={{
+          fontFamily: "Modak",
+        }}
+      >
+        {content.map((e, idx) => (
+          <span
+            style={{
+              transitionDelay: `${idx * 100}ms`,
+              opacity: "0",
+              minWidth: "50px",
+              height: "128px",
+            }}
+            key={idx}
+          >
+            {e !== " " ? e.toUpperCase() : " "}
+          </span>
+        ))}
+      </div>
+    </>
   );
 };
 
@@ -89,7 +99,7 @@ const Home: NextPage = () => {
   const firstRef = useRef<HTMLInputElement>();
   const secondRef = useRef<HTMLInputElement>();
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [overlappingChars, setOverlappingChars] = useState<string[]>([]);
 
@@ -138,9 +148,9 @@ const Home: NextPage = () => {
           rel="stylesheet"
         />
       </Head>
-      <main className="flex h-fit min-h-screen flex-col items-center justify-start sm:justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
+      <main className="flex h-fit min-h-screen flex-col items-center justify-start bg-gradient-to-b from-[#2e026d] to-[#15162c] sm:justify-center">
         <div className="container flex h-fit flex-col items-center justify-center gap-12 px-4 py-16 ">
-          <h1 className="text-5xl font-extrabold tracking-tight text-white md:text-7xl w-min sm:w-fit">
+          <h1 className="w-min text-5xl font-extrabold tracking-tight text-white sm:w-fit md:text-7xl">
             Find <span className="text-[hsl(280,100%,70%)]">overlap</span> of
             words
           </h1>
@@ -164,19 +174,15 @@ const Home: NextPage = () => {
             </div>
 
             <button
-              className="sm:col-span-2 sm:col-start-2 w-full rounded bg-[hsl(280,100%,70%)] py-2 px-4 font-semibold text-white hover:bg-[hsl(280,100%,50%)]"
+              className="w-full rounded bg-[hsl(280,100%,70%)] py-2 px-4 font-semibold text-white hover:bg-[hsl(280,100%,50%)] sm:col-span-2 sm:col-start-2"
               type="submit"
             >
               Submit form
             </button>
           </form>
 
-          <div className="h-10 h-fit w-full max-w-full">
-            {!isLoading && overlappingChars.length ? (
-              <Overlap content={overlappingChars} />
-            ) : (
-              <></>
-            )}
+          <div className="h-fit w-full max-w-full">
+            {!isLoading ? <Overlap content={overlappingChars} /> : <></>}
           </div>
         </div>
       </main>
