@@ -1,6 +1,11 @@
 {
-  "name": "test-task",
+  "name": "sendsteps-overlap",
   "version": "0.1.0",
+  "author": {
+    "name": "Mariia Kucheieva",
+    "email": "mary.kucheeva@gmail.com"
+  },
+  "license": "MIT",
   "private": true,
   "scripts": {
     "build": "next build",
