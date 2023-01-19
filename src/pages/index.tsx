@@ -1,14 +1,8 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-import {
-  FormEventHandler,
-  MutableRefObject,
-  useEffect,
-  useLayoutEffect,
-} from "react";
+import type { FormEventHandler, MutableRefObject } from "react";
+import { useEffect } from "react";
 import { useRef, useState } from "react";
-import gsap from "gsap";
-// import SplitText from 'gsap/SplitText';
 
 import { api } from "../utils/api";
 
@@ -123,6 +117,7 @@ const Home: NextPage = () => {
       onSuccess(data) {
         console.log({ data });
         const chars = data.positions.map(
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           ([position]: number[]) => requestData.first[position!]!
         );
         setOverlappingChars(chars);
@@ -143,6 +138,7 @@ const Home: NextPage = () => {
           href="https://fonts.gstatic.com"
           crossOrigin=""
         />
+        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link
           href="https://fonts.googleapis.com/css2?family=Modak&display=swap"
           rel="stylesheet"
