@@ -12,9 +12,13 @@ export const overlapRouter = createTRPCRouter({
       })
     )
     .mutation(({ input: { first, second, countSpaceAsChar } }) => {
-      const strings = [first, second]
-        .sort((a, b) => a.length - b.length)
-        .map((str) => (countSpaceAsChar ? str : str.replaceAll(" ", "")));
+      const strings = [first, second].sort((a, b) => {
+        if (countSpaceAsChar) {
+          return a.length - b.length;
+        }
+
+        return a.replaceAll(" ", "").length - b.replaceAll(" ", "").length;
+      });
 
       const [smaller, bigger] = strings as [string, string];
 
@@ -33,6 +37,10 @@ export const overlapRouter = createTRPCRouter({
         idxInSmaller++
       ) {
         const char = smaller[idxInSmaller];
+
+        if (char == " " && !countSpaceAsChar) {
+          continue;
+        }
 
         const idxInBigger = charsOfBigger.findIndex(
           (c, i) => i > lastIndexInBigger && c == char
