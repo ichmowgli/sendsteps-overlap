@@ -26,42 +26,52 @@ export const overlapRouter = createTRPCRouter({
 
       const charsOfBigger: Array<string | undefined> = bigger.split("");
 
-      let amountFound = 0;
-      const positions: number[][] = [];
+      let maxAmount = 0;
+      let resultingPositions: number[][] = [];
 
-      let lastIndexInBigger = -1;
+      for (let startAt = 0; startAt < smaller.length; startAt++) {
+        let amountFound = 0;
+        const positions: number[][] = [];
 
-      for (
-        let idxInSmaller = 0;
-        idxInSmaller < smaller.length;
-        idxInSmaller++
-      ) {
-        const char = smaller[idxInSmaller];
+        let lastIndexInBigger = -1;
 
-        if (char == " " && !countSpaceAsChar) {
-          continue;
+        for (
+          let idxInSmaller = startAt;
+          idxInSmaller < smaller.length;
+          idxInSmaller++
+        ) {
+          const char = smaller[idxInSmaller];
+
+          if (char == " " && !countSpaceAsChar) {
+            continue;
+          }
+
+          const idxInBigger = charsOfBigger.findIndex(
+            (c, i) => i > lastIndexInBigger && c == char
+          );
+
+          if (idxInBigger >= 0) {
+            lastIndexInBigger = idxInBigger;
+            amountFound++;
+
+            const pos = shouldSwapPositions
+              ? [idxInBigger, idxInSmaller]
+              : [idxInSmaller, idxInBigger];
+            positions.push(pos);
+
+            charsOfBigger[idxInBigger] = undefined;
+          }
         }
 
-        const idxInBigger = charsOfBigger.findIndex(
-          (c, i) => i > lastIndexInBigger && c == char
-        );
-
-        if (idxInBigger >= 0) {
-          lastIndexInBigger = idxInBigger;
-          amountFound++;
-
-          const pos = shouldSwapPositions
-            ? [idxInBigger, idxInSmaller]
-            : [idxInSmaller, idxInBigger];
-          positions.push(pos);
-
-          charsOfBigger[idxInBigger] = undefined;
+        if (amountFound > maxAmount) {
+          maxAmount = amountFound;
+          resultingPositions = positions;
         }
       }
 
       return {
-        amount: amountFound,
-        positions,
+        amount: maxAmount,
+        positions: resultingPositions,
       };
     }),
 });

@@ -32,7 +32,24 @@ describe("overlap router", () => {
     });
 
     describe("one-word cases", () => {
-      it("works", async () => {
+      it("should find MAX overlap instead of first one", async () => {
+        const input: Input = {
+          first: "orange",
+          second: "rhinoceros",
+        };
+
+        const result = await caller.calculate(input);
+        expect(result).toMatchObject({
+          amount: 3,
+          positions: [
+            [1, 0],
+            [3, 3],
+            [5, 6],
+          ],
+        });
+      });
+
+      it("works [1]", async () => {
         const input: Input = {
           first: "first",
           second: "second",
@@ -40,6 +57,56 @@ describe("overlap router", () => {
 
         const result = await caller.calculate(input);
         expect(result).toMatchObject({ amount: 1, positions: [[3, 0]] });
+      });
+
+      it("works [2]", async () => {
+        const input: Input = {
+          first: "device",
+          second: "ice",
+        };
+
+        const result = await caller.calculate(input);
+        expect(result).toMatchObject({
+          amount: 3,
+          positions: [
+            [3, 0],
+            [4, 1],
+            [5, 2],
+          ],
+        });
+      });
+
+      it("works [3]", async () => {
+        const input: Input = {
+          first: "intercities",
+          second: "ice",
+        };
+
+        const result = await caller.calculate(input);
+        expect(result).toMatchObject({
+          amount: 3,
+          positions: [
+            [0, 0],
+            [5, 1],
+            [9, 2],
+          ],
+        });
+      });
+
+      it("works [4]", async () => {
+        const input: Input = {
+          first: "client",
+          second: "ice",
+        };
+
+        const result = await caller.calculate(input);
+        expect(result).toMatchObject({
+          amount: 2,
+          positions: [
+            [2, 0],
+            [3, 2],
+          ],
+        });
       });
 
       it("same strings", async () => {
@@ -162,11 +229,12 @@ describe("overlap router", () => {
 
           const result = await caller.calculate(input);
           expect(result).toMatchObject({
-            amount: 3,
+            amount: 4,
             positions: [
-              [9, 1],
-              [17, 2],
-              [25, 7],
+              [0, 4],
+              [5, 6],
+              [8, 8],
+              [10, 11],
             ],
           });
         });
